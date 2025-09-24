@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scytale Cipher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            gap: 40px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .card {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .card h2 {
+            margin-top: 0;
+            color: #00e676;
+            font-weight: 700;
+            border-bottom: 2px solid #00e676;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+            color: #e0e0e0;
+            box-sizing: border-box;
+            font-size: 16px;
+            resize: none;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #00e676;
+            box-shadow: 0 0 5px rgba(0, 230, 118, 0.5);
+        }
+        .result-box {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #555;
+            min-height: 50px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            margin-top: 15px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: auto;
+        }
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .encrypt-btn {
+            background-color: #00e676;
+            color: #121212;
+        }
+        .decrypt-btn {
+            background-color: #ff3d00;
+            color: #121212;
+        }
+        .encrypt-btn:hover, .decrypt-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+        .error-message {
+            color: #ff3d00;
+            margin-top: 10px;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card" id="encrypt-card">
+            <h2>Encrypt</h2>
+            <div class="form-group">
+                <label for="encrypt-text">Plaintext</label>
+                <textarea id="encrypt-text" rows="4" placeholder="Enter your message here..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="encrypt-key">Key</label>
+                <input type="number" id="encrypt-key" placeholder="Enter key (e.g., 3, 5, 7)" value="3">
+            </div>
+            <div class="button-group">
+                <button class="encrypt-btn" onclick="performOperation('encrypt')">Encrypt</button>
+            </div>
+            <div class="result-box" id="encrypt-result"></div>
+        </div>
+
+        <div class="card" id="decrypt-card">
+            <h2>Decrypt</h2>
+            <div class="form-group">
+                <label for="decrypt-text">Ciphertext</label>
+                <textarea id="decrypt-text" rows="4" placeholder="Enter ciphertext here..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="decrypt-key">Key</label>
+                <input type="number" id="decrypt-key" placeholder="Enter key (e.g., 3, 5, 7)" value="3">
+            </div>
+            <div class="button-group">
+                <button class="decrypt-btn" onclick="performOperation('decrypt')">Decrypt</button>
+            </div>
+            <div class="result-box" id="decrypt-result"></div>
+        </div>
+    </div>
+
+    <script>
+        async function performOperation(operation) {
+            const textInput = document.getElementById(`${operation}-text`);
+            const keyInput = document.getElementById(`${operation}-key`);
+            const resultBox = document.getElementById(`${operation}-result`);
+            
+            const text = textInput.value;
+            const key = parseInt(keyInput.value, 10);
+            
+            if (!text || isNaN(key) || key <= 0) {
+                resultBox.textContent = 'Please enter valid text and a positive key.';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/${operation}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, key })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultBox.textContent = data.result;
+                } else {
+                    resultBox.textContent = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                resultBox.textContent = 'An error occurred. Please check the server.';
+            }
+        }
+    </script>
+</body>
+</html>
