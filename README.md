@@ -10,3 +10,7 @@ The process is exactly as you described:
 4.  To decrypt the message, the recipient must wrap the strip around a scytale of the exact same diameter as the one used by the sender.
 
 The key to the cipher isn't a secret word or code, but the **diameter of the stick**, which determines the number of characters per turn of the spiral. Without a stick of the correct diameter, the message is unreadable. This method is an early example of a cryptographic key that is a physical object rather than a piece of information.
+
+
+
+<img width="1906" height="976" alt="image" src="https://github.com/user-attachments/assets/968a8266-8f9d-4484-bd9f-b324e877198a" />
