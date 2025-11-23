@@ -3,7 +3,7 @@ import math
 
 app = Flask(__name__)
 
-# --- Scytale Cipher Functions ---
+#Scytale Cipher Functions
 
 def encrypt_scytale(plaintext, key):
     """Encrypts a message using the scytale cipher."""
@@ -43,7 +43,7 @@ def decrypt_scytale(ciphertext, key):
             
     return plaintext.replace("_", "")
 
-# --- Flask Routes ---
+#Flask Routes
 
 @app.route('/')
 def home():
@@ -78,5 +78,6 @@ def decrypt():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 #Iftekhar still ekta gramer chele
